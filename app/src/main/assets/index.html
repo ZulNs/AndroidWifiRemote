@@ -1,0 +1,1387 @@
+<!doctype html>
+<html lang='us'>
+<head>
+	<meta charset='utf-8'>
+	<link rel='shortcut icon' type='image/png' href='favicon.png'>
+	<title>Android WiFi Remote</title>
+	<link href='jquery-ui.min.css' rel='stylesheet'>
+	<style>
+	body{
+		font:85% 'Trebuchet MS',sans-serif;
+		margin:10px;
+	}
+	ul.main  span.ui-icon,ul.cam_settings span.ui-icon{
+		position:absolute;
+		top:50%;
+		margin-left:-4px;
+		margin-top:-8px;
+	}
+	#explorer_help li{
+		position:relative;
+		padding:4px;
+		cursor:pointer;
+		float:left;
+		list-style:none;
+	}
+	#explorer_content a{
+		text-decoration:none;
+	}
+	#explorer_content li{
+		position:relative;
+		padding:2px 4px 2px 8px;
+		list-style:none;
+	}
+	#explorer_content span.ui-icon{
+		position:absolute;
+		top:50%;
+		margin-left:-24px;
+		margin-top:-8px;
+	}
+	#explorer_content ul span.ui-icon{
+		cursor:pointer;
+	}
+	#parent_dir{
+		position:relative;
+		margin-left:24px;
+	}
+	#total_item{
+		margin-left:24px;
+	}
+	#dirs{
+		font-weight:bold;
+	}
+	.headers{
+		margin-top:10px;
+	}
+	.no-close .ui-dialog-titlebar-close{
+		display:none;
+	}
+	#voices_label{
+		margin-right:4px;
+	}
+	#select_voice{
+		width:230px;
+	}
+	.ui-selectmenu-button{
+		vertical-align:middle;
+	}
+	div.speech_slider{
+		width:308px;
+		margin:12px 0 24px 6px;
+	}
+	#msg_to_speak{
+		width:320px;
+		height:120px;
+		margin-bottom:20px;
+	}
+	#tts button{
+		width:100px;
+		text-align:left;
+	}
+	#flush{
+		margin-left:9px;
+		margin-right:9px;
+	}
+	div.option_menu button{
+		width:100%;
+		text-align:left;
+		margin:4px 0 2px 0;
+	}
+	#others button{
+		width:346px;
+		text-align:left;
+	}
+	span.filesize{
+		font-size:80%;
+	}
+	#xhr_progressbar{
+		width:100%;
+	}
+	.mark_copy{
+		color:Crimson!important;
+	}
+	#camera{
+		position:relative;
+	}
+	#camera button{
+		width:140px;
+		text-align:left;
+		margin:4px 0 4px 0;
+	}
+	#preview_frame{
+		position:absolute;
+		left:180px;
+		top:18px;
+	}
+	#cam_settings{
+		position:absolute;
+		left:590px;
+		top:18px;
+	}
+	#cam_settings tr{
+		height:40px;
+	}
+	.column_select{
+		padding-left:16px;
+	}
+	.camera_settings_select{
+		width:200px;
+	}
+	#exposure_value{
+		width:200px;
+	}
+	#apply_camera_settings{
+		left:75px;
+	}
+	</style>
+</head>
+<body>
+
+<!-- Tabs -->
+<h2><span id='device_name'>Android</span>&nbsp;WiFi&nbsp;Remote<span id='app_status'></span></h2>
+<div id='main'>
+	<ul class='main'>
+		<li><a href='#explorer'><span class='ui-icon ui-icon-disk'></span>&nbsp;&nbsp;&nbsp;&nbsp;Explorer</a></li>
+		<li><a href='#tts'><span class='ui-icon ui-icon-volume-on'></span>&nbsp;&nbsp;&nbsp;&nbsp;TTS</a></li>
+		<li><a href='#camera'><span class='ui-icon ui-icon-video'></span>&nbsp;&nbsp;&nbsp;&nbsp;Camera</a></li>
+		<li><a href='#others'><span class='ui-icon ui-icon-gear'></span>&nbsp;&nbsp;&nbsp;&nbsp;Others</a></li>
+		<li><a href='#about'><span class='ui-icon ui-icon-person'></span>&nbsp;&nbsp;&nbsp;&nbsp;About</a></li>
+	</ul>
+	<div id='explorer'>
+		<div id='explorer_help'>&nbsp;
+			<li class='ui-state-default ui-corner-all'>
+				<span class='ui-icon ui-icon-help'></span>
+			</li>
+		</div>
+		<div id='explorer_content'>
+		</div>
+	</div>
+	
+	<div id='tts'>
+		<label id='voices_label' for='select_voice'>Select voice&nbsp;:</label>
+		<select id='select_voice'>
+		</select><br><br>
+		<label for='pitch'>Pitch&nbsp;:</label>
+		<div id='pitch' class='speech_slider'></div>
+		<label for='speech_rate'>Speech&nbsp;rate&nbsp;:</label>
+		<div id='speech_rate' class='speech_slider'></div>
+		<label for='volume'>Volume&nbsp;:</label>
+		<div id='volume' class='speech_slider'></div>
+		<textarea id='msg_to_speak' placeholder='Write message to speak here...'></textarea><br>
+		<button id='speak'>Speak</button>
+		<button id='flush'>Flush</button>
+		<button id='clear_msg'>Clear</button>
+	</div>
+	
+	<div id='camera'>
+		<button id='camera_rear'>Rear Camera</button><br>
+		<button id='camera_front'>Front Camera</button><br>
+		<button id='camera_off'>Camera Off</button><br>
+		<button id='preview_on'>Preview On</button><br>
+		<button id='preview_off'>Preview Off</button><br>
+		<button id='capture_photo'>Capture Photo</button><br>
+		<button id='start_record'>Start Record</button><br>
+		<button id='stop_record'>Stop Record</button><br>
+		<button id='flash_on'>Flash On</button><br>
+		<button id='flash_off'>Flash Off</button><br>
+		<img id='preview_frame' src='#' alt='Video Preview' width='388' height='284' border='1'>
+		<div id='cam_settings'>
+			<ul class='cam_settings'>
+				<li><a href='#camera_settings'><span class='ui-icon ui-icon-gear'></span>&nbsp;&nbsp;&nbsp;&nbsp;Camera Settings</a></li>
+			</ul>
+			<div id='camera_settings'>
+				<table>
+					<tr>
+						<td>
+							<label for='picture_sizes'>Picture Sizes&nbsp;:</label>
+						</td>
+						<td class='column_select'>
+							<select id='picture_sizes' class='camera_settings_select'>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for='video_profiles'>Video Sizes&nbsp;:</label>
+						</td>
+						<td class='column_select'>
+							<select id='video_profiles' class='camera_settings_select'>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for='scene_modes'>Scene Modes&nbsp;:</label>
+						</td>
+						<td class='column_select'>
+							<select id='scene_modes' class='camera_settings_select'>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for='white_balance'>White Balance&nbsp;:</label>
+						</td>
+						<td class='column_select'>
+							<select id='white_balance' class='camera_settings_select'>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for='color_effects'>Color Effects&nbsp;:</label>
+						</td>
+						<td class='column_select'>
+							<select id='color_effects' class='camera_settings_select'>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for='exposure_value'>Exposure Value&nbsp;:</label>
+						</td>
+						<td class='column_select'>
+							<div id='exposure_value' class='camera_settings'></div>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<button id='apply_camera_settings'>Apply</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<div id='others'>
+		<p><button id='logout_link'>Logout</button></p>
+		<p><button id='shutdown_link'>Shutdown</button></p>
+	</div>
+	
+	<div id='about'>
+		<h4 id='app_about'></h4>
+	</div>
+</div>
+
+<div id='dialog'></div>
+
+<div id='login_dialog'>
+	<p><input id='username' type='text' placeholder='Username...'></p>
+	<p><input id='password' type='password' placeholder='Password...'></p>
+	<p><button id='login'>Login</button></p>
+</div>
+
+<div id='file_frame_dialog'>
+	<iframe id='file_frame' align='middle' frameborder='0' marginwidth='0' marginheight='0' allowfullscreen></iframe>
+</div>
+
+<div id='parent_option_menu' class='option_menu'>
+	<button id='new_dir_link'>New directory</button>
+	<button id='upload'>Upload</button>
+	<button id='paste_here'>Paste here...</button>
+	<button id='move_here'>Move here...</button>
+	<button id='refresh'>Refresh</button>
+</div>
+
+<div id='item_option_menu' class='option_menu'>
+	<button id='delete_link'>Delete</button>
+	<button id='rename_link'>Rename</button>
+	<button id='copy_to'>Copy to...</button>
+</div>
+
+<div id='freeze_dialog'></div>
+
+<div style='display:none'>
+	<form id='form_upload' action='javascript:;' enctype='multipart/form-data' method='post' accept-charset='utf-8'>
+		<input id='browse_file' name='filename' type='file' multiple>
+	</form>
+</div>
+
+<script src='jquery.min.js'></script>
+<script src='jquery-ui.min.js'></script>
+<script>
+
+var _isSupportTts;
+var _sourceId;
+var _sourceName;
+var _dirCount=0;
+var _fileCount=0;
+var _currentVoice;
+var _currentPitch;
+var _currentSpeechRate;
+var _copyTo={name:'',href:'',parent:''};
+var _isCameraSupport;
+var _isCameraFrontSupport;
+var _CAMERA={REAR:0,FRONT:1};
+var _videoInterval;
+var _isPreviewing=false;
+var _cameraType;
+var _timerCounter;
+
+/******************************
+ * UI components initializing *
+ ******************************/
+
+$('#main').tabs({
+	collapsible:true,
+	active:false,
+	disabled:true
+});
+
+$('#select_voice').selectmenu();
+
+$('#pitch').slider({
+	max:2,
+	step:0.125,
+	value:1
+});
+
+$('#speech_rate').slider({
+	max:2,
+	step:0.125,
+	value:1
+});
+
+$('#volume').slider({
+	range:'min',
+	max:15,
+	value:7
+});
+
+$('#speak').button({
+	icons:{primary:'ui-icon-volume-on'}
+});
+
+$('#flush').button({
+	icons:{primary:'ui-icon-volume-off'}
+});
+
+$('#clear_msg').button({
+	icons:{primary:'ui-icon-trash'}
+});
+
+$('#camera_rear').button({
+	disabled:false,
+	icons:{primary:'ui-icon-video'}
+});
+
+$('#camera_front').button({
+	disabled:true,
+	icons:{primary:'ui-icon-person'}
+});
+
+$('#camera_off').button({
+	disabled:true,
+	icons:{primary:'ui-icon-circle-close'}
+});
+
+$('#preview_on').button({
+	disabled:true,
+	icons:{primary:'ui-icon-video'}
+});
+
+$('#preview_off').button({
+	disabled:true,
+	icons:{primary:'ui-icon-close'}
+});
+
+$('#capture_photo').button({
+	disabled:true,
+	icons:{primary:'ui-icon-image'}
+});
+
+$('#start_record').button({
+	disabled:true,
+	icons:{primary:'ui-icon-bullet'}
+});
+
+$('#stop_record').button({
+	disabled:true,
+	icons:{primary:'ui-icon-stop'}
+});
+
+$('#flash_on').button({
+	disabled:true,
+	icons:{primary:'ui-icon-lightbulb'}
+});
+
+$('#flash_off').button({
+	disabled:true,
+	icons:{primary:'ui-icon-close'}
+});
+
+$('#cam_settings').tabs({
+	collapsible:true,
+	active:false,
+	disabled:true
+});
+
+$('.camera_settings_select').selectmenu({
+	disabled:true
+});
+
+$('#exposure_value').slider({
+	disabled:true,
+	min:-6,
+	max:6
+});
+
+$('#apply_camera_settings').button({
+	icons:{primary:'ui-icon-gear'}
+});
+
+$('#logout_link').button({
+	icons:{primary:'ui-icon-circle-close'}
+});
+
+$('#shutdown_link').button({
+	icons:{primary:'ui-icon-power'}
+});
+
+$('#login_dialog').dialog({
+	title:'Login to '+document.title,
+	dialogClass:'no-close',
+	closeOnEscape:false,
+	autoOpen:false,
+	modal:true,
+	resizable:false,
+	position:{my:'left top',at:'left bottom',of:$('#main')}
+});
+
+$('#login').button({
+	icons:{primary:'ui-icon-circle-check'}
+});
+
+$('#dialog').dialog({
+	title:document.title,
+	autoOpen:false,
+	modal:true,
+	resizable:false,
+	position:{my:'left+80 bottom',at:'left center',of:window},
+	close:function(){
+		var msg=$(this).text();
+		if(msg.substring(0,8)==='Timeout:'||
+		   msg.substring(0,13)==='Unauthorized:'||
+		   msg.substring(0,4)==='Bye ')
+			showLoginDialog();
+	}
+});
+
+$('#parent_option_menu').dialog({
+	autoOpen:false,
+	modal:true,
+	resizable:false
+});
+
+$('#new_dir_link').button({
+	icons:{primary:'ui-icon-folder-collapsed'}
+});
+
+$('#upload').button({
+	icons:{primary:'ui-icon-arrowthick-1-n'}
+});
+
+$('#paste_here').button({
+	icons:{primary:'ui-icon-copy'}
+});
+
+$('#move_here').button({
+	icons:{primary:'ui-icon-scissors'}
+});
+
+$('#refresh').button({
+	icons:{primary:'ui-icon-refresh'}
+});
+
+$('#item_option_menu').dialog({
+	autoOpen:false,
+	modal:true,
+	resizable:false
+});
+
+$('#delete_link').button({
+	icons:{primary:'ui-icon-trash'}
+});
+
+$('#rename_link').button({
+	icons:{primary:'ui-icon-arrowrefresh-1-w'}
+});
+
+$('#copy_to').button({
+	icons:{primary:'ui-icon-clipboard'}
+});
+
+$('#file_frame_dialog').dialog({
+	autoOpen:false,
+	modal:true,
+	resizable:false,
+	width:'auto',
+	height:'auto',
+	close:function(){
+		var msg=$('#file_frame').contents().find('body').text();
+		if(msg==='Timeout: Login required'||
+		   msg==='Unauthorized: Login required'||
+		   msg==='Unauthorized: Already connected to another user')
+			showLoginDialog();
+		$('#file_frame').attr('src','');
+	}
+});
+
+$('#freeze_dialog').dialog({
+	dialogClass:'no-close',
+	closeOnEscape:false,
+	autoOpen:false,
+	modal:true,
+	resizable:false,
+	draggable:false,
+	position:{my:'left+52 bottom',at:'left center',of:window}
+});
+
+/****************************************************
+ * Event handler initializing and display preparing *
+ ****************************************************/
+
+init();
+//offlineInit();
+
+function init(){
+	setClientTitle();
+	setAvailableVoice();
+	setVolume();
+	getCameraParams();
+	addHoverEvent('#explorer_help li');
+	setAppAbout();
+	validateUser();
+}
+
+function offlineInit(){
+	$('#main').tabs('enable');
+	$('#main').tabs('option','active',0);
+	$('#device_name').text('Device Model');
+	addHoverEvent('#explorer_help li,#parent_dir a,#explorer_content ul li');
+	addParentOptionMenuEvent();
+	addIconClickEvent('#explorer_content ul .ui-icon');
+	setTotalItem();
+}
+
+/****************************
+ * Components event handler *
+ ****************************/
+
+$('#login').click(function(){
+	if($('#username').val()===''||$('#password').val()==='')return;
+	$.post('/login',{
+			username:$('#username').val(),
+			password:$('#password').val()
+		},function(data){
+			if(data.substring(0,7)==='Success'){
+				$('#login_dialog').dialog('close');
+				initTabs();
+				showAlertDialog(data.substring(9));
+			}else showAlertDialog(data);
+		}
+	);
+	$('#password').val('');
+});
+
+$('#explorer_help li').click(function(){
+	showAlertDialog('Click on the parent directory to make a new directory, upload a file, paste from clipboard, move from clipboard and refresh the contents.<br>'+
+					'Also click on the related icon of a file or directory to delete, rename and copy (place into clipboard) it.');
+});
+
+$('#new_dir_link').click(function(){
+	$('#parent_option_menu').dialog('close');
+	showConfirmDialog(this);
+});
+
+$('#upload').click(function(){
+	$('#parent_option_menu').dialog('close');
+	$('#browse_file').click();
+});
+
+$('#browse_file').change(function(){
+	$('#form_upload').submit();
+});
+
+$('#form_upload').submit(function(event){
+	var formData=new FormData();
+	$.each($('#browse_file')[0].files, function(i,file){
+		formData.append('filename'+i,file);
+	});
+	showFreezeDialog('Uploading...',$('#browse_file').val()+' (and more)...');
+	var request=$.ajax({
+		url:'/uploadfiles',
+		type:'POST',
+		data:formData,
+		contentType:false,
+		processData:false
+	});
+	/*request.xhr(function(){
+		if(window.ActiveXObject)return new window.ActiveXObject('Microsoft.XMLHTTP');
+		else{
+			var xhr=new window.XMLHttpRequest();
+			xhr.upload.addEventListener('progress',function(event){
+				if(event.lengthComputable){
+					var percentComplete=event.loaded/event.total*100;
+					$('#xhr_progressbar').progressbar('value',percentComplete);
+					$('#xhr_percent_complete').text(percentComplete+'%');
+				}
+			},false);
+			xhr.addEventListener('progress',function(event){
+				if(event.lengthComputable){
+					var percentComplete=event.loaded/event.total*100;
+					$('#xhr_progressbar').progressbar('value',percentComplete);
+					$('#xhr_percent_complete').text(percentComplete+'%');
+				}
+			},false);
+			return xhr;
+		}
+	});*/
+	request.done(function(data){
+		$('#freeze_dialog').dialog('close');
+		if(data!=='Success')
+			showAlertDialog(data);
+		//addFilelistItem(data.substring(8,11),$('#browse_file').val(),data.substring(12));
+		setExplorerContent($('#parent_option').attr('href'));
+	});
+	request.fail(function(data){
+		$('#freeze_dialog').dialog('close');
+		showAlertDialog('Upload error');
+		setExplorerContent($('#parent_option').attr('href'));
+	});
+	event.preventDefault();
+});
+
+$('#paste_here').click(function(){
+	$('#parent_option_menu').dialog('close');
+	showFreezeDialog('Copying...',_copyTo.name);
+	$.post('/copyfile',{
+			source:decodeURIComponent(_copyTo.href)
+		},function(data){
+			$('#freeze_dialog').dialog('close');
+			if(data.substring(0,7)==='Success')
+				successOfPasteOrMove(data.substring(8));
+			else showAlertDialog(data);
+		}
+	);
+});
+
+$('#move_here').click(function(){
+	$('#parent_option_menu').dialog('close');
+	showFreezeDialog('Moving...',_copyTo.name);
+	$.post('/movefile',{
+			source:decodeURIComponent(_copyTo.href)
+		},function(data){
+			$('#freeze_dialog').dialog('close');
+			if(data.substring(0,7)==='Success'){
+				successOfPasteOrMove(data.substring(8));
+				_copyTo.href='';
+			}else showAlertDialog(data);
+		}
+	);
+});
+
+$('#refresh').click(function(){
+	$('#parent_option_menu').dialog('close');
+	setExplorerContent($('#parent_option').attr('href'));
+});
+
+$('#delete_link,#rename_link').click(function(){
+	$('#item_option_menu').dialog('close');
+	showConfirmDialog(this);
+});
+
+$('#copy_to').click(function(){
+	$('#item_option_menu').dialog('close');
+	if(_copyTo.href!==''&&_copyTo.parent===$('#parent_option').attr('href'))
+		$("a[href='"+_copyTo.href+"']").attr('class','');
+	_copyTo.name=$('#'+_sourceId).find('a').text();
+	_copyTo.href=$('#'+_sourceId).find('a').attr('href');
+	_copyTo.parent=$('#parent_option').attr('href');
+	$("a[href='"+_copyTo.href+"']").attr('class','mark_copy');
+});
+
+$('#speak').click(function(){
+	var pitch=$('#pitch').slider('value');
+	var speechRate=$('#speech_rate').slider('value');
+	var volume=$('#volume').slider('value');
+	if(pitch===0)pitch=0.01;
+	if(speechRate===0)speechRate=0.01;
+	$.post('/tts',{
+			voice:$('#select_voice').val(),
+			pitch:pitch,
+			speechrate:speechRate,
+			volume:volume,
+			message:$('#msg_to_speak').val()
+		},function(data){
+			if(data!=='Success')showAlertDialog(data);
+		}
+	);
+});
+
+$('#flush').click(function(){
+	$.get('/flush',function(data){
+		if(data!=='Success')showAlertDialog(data);
+	});
+});
+
+$('#clear_msg').click(function(){
+	$('#msg_to_speak').val('');
+});
+
+$('#camera_rear').click(function(){
+	_cameraType=_CAMERA.REAR;
+	setCameraOn();
+});
+
+$('#camera_front').click(function(){
+	_cameraType=_CAMERA.FRONT;
+	setCameraOn();
+});
+
+$('#camera_off').click(function(){
+	setCameraOff(false);
+});
+
+$('#preview_on').click(function(){
+	_isPreviewing=true;
+	$('#preview_on').button('disable');
+	$('#preview_off').button('enable');
+	startVideoPreview();
+});
+
+$('#preview_off').click(function(){
+	_isPreviewing=false;
+	$('#preview_off').button('disable');
+	$('#preview_on').button('enable');
+	stopVideoPreview();
+});
+
+$('#capture_photo').click(function(){
+	$.get('/camera/takepicture',function(data){
+		if(data==='Camera inactive')setCameraOff(false);
+		if(data!=='Success')showAlertDialog(data);
+	});
+});
+
+$('#start_record').click(function(){
+	$.get('/camera/startrecord',function(data){
+		if(data==='Camera inactive')setCameraOff(false);
+		if(data==='Success'){
+			$('#start_record').button('disable');
+			$('#stop_record').button('enable');
+		}else showAlertDialog(data);
+	});
+});
+
+$('#stop_record').click(function(){
+	$.get('/camera/stoprecord',function(data){
+		if(data==='Camera inactive')setCameraOff(false);
+		if(data==='Success'){
+			$('#start_record').button('enable');
+			$('#stop_record').button('disable');
+		}else showAlertDialog(data);
+	});
+});
+
+$('#flash_on').click(function(){
+	$.get('/camera/setflashon',function(data){
+		if(data==='Camera inactive')setCameraOff(false);
+		if(data==='true'){
+			$('#flash_on').button('disable');
+			$('#flash_off').button('enable');
+		}else showAlertDialog(data);
+	});
+});
+
+$('#flash_off').click(function(){
+	$.get('/camera/setflashoff',function(data){
+		if(data==='Camera inactive')setCameraOff(false);
+		if(data==='true'){
+			$('#flash_on').button('enable');
+			$('#flash_off').button('disable');
+		}else showAlertDialog(data);
+	});
+});
+
+$('#apply_camera_settings').click(function(){
+	var ps='',sm='',wb='',ce='',vp='',ev='';
+	if(!$('#picture_sizes').selectmenu('option','disabled'))
+		ps=$('#picture_sizes').val();
+	if(!$('#scene_modes').selectmenu('option','disabled'))
+		sm=$('#scene_modes').val();
+	if(!$('#white_balance').selectmenu('option','disabled'))
+		wb=$('#white_balance').val();
+	if(!$('#color_effects').selectmenu('option','disabled'))
+		ce=$('#color_effects').val();
+	if(!$('#video_profiles').selectmenu('option','disabled'))
+		vp=$('#video_profiles').val();
+	if(!$('#exposure_value').slider('option','disabled'))
+		ev=$('#exposure_value').slider('value');
+	$.post('/camera/setcameraparameters',{
+			picturesize:ps,
+			scenemode:sm,
+			whitebalance:wb,
+			coloreffect:ce,
+			videoprofile:vp,
+			exposurevalue:ev
+		},function(data){
+			if(data!=='Success')showAlertDialog(data);
+		}
+	);
+	$('#cam_settings').tabs('option','active',false);
+});
+
+$('#logout_link,#shutdown_link').click(function(){
+	showConfirmDialog(this);
+});
+
+/***************
+ * Other tools *
+ ***************/
+
+function validateUser(){
+	$.get('/logged',function(data){
+		var log=(data==='true')?true:false;
+		if(log)initTabs();
+		else $('#login_dialog').dialog('open');
+	});
+}
+
+function initTabs(){
+	_copyTo.href='';
+	setExplorerContent('/storage');
+	$('#main').tabs('enable');
+	$('#main').tabs('option','active',0);
+	if(!_isSupportTts)$('#main').tabs('disable','#tts');
+	if(!_isCameraSupport)$('#main').tabs('disable','#camera');
+	else if(_isCameraFrontSupport)$('#camera_front').button('enable');
+}
+
+function getCameraParams(){
+	$.get('/camera/iscamerasupport',function(data){
+		_isCameraSupport=(data==='true')?true:false;
+	});
+	$.get('/camera/iscamerafrontsupport',function(data){
+		_isCameraFrontSupport=(data==='true')?true:false;
+	});
+}
+
+function setAvailableVoice(){
+	$.get('/availablevoice',function(data){
+		if(data==='TTS not supported'){
+			_isSupportTts=false;
+		}else{
+			$('#select_voice').empty().append(data);
+			$('#select_voice').selectmenu('refresh');
+			_isSupportTts=true;
+		}
+	});
+}
+
+function setVolume(){
+	$.get('/volumemax',function(data){
+		$('#volume').slider('option','max',parseInt(data));
+	});
+	$.get('/volumecurrent',function(data){
+		$('#volume').slider('value',parseInt(data));
+	});
+}
+
+function setClientTitle(){
+	$.get('/getdevicename',function(data){
+		$('#device_name').html(data);
+		setAppStatus();
+	});
+}
+
+function setAppStatus() {
+	$.get('/getappstatus',function(data){
+		$('#app_status').html(data);
+	});
+}
+
+function setAppAbout(){
+	$.get('/getappabout',function(data){
+		$('#app_about').text(data);
+	});
+}
+
+function setExplorerContent(action){
+	$.get(action,function(data){
+		if(data.substring(4,11)==='success'){
+			$('#explorer_content').empty().append(data);
+			$('h3','#parent_dir').before("<span class='ui-icon ui-icon-folder-open'></span>");
+			$('a','#dirs').before("<span class='ui-icon ui-icon-folder-collapsed'></span>");
+			$('a','li.img').before("<span class='ui-icon ui-icon-image'></span>");
+			$('a','li.aud').before("<span class='ui-icon ui-icon-volume-on'></span>");
+			$('a','li.vid').before("<span class='ui-icon ui-icon-video'></span>");
+			$('a','li.txt').before("<span class='ui-icon ui-icon-document'></span>");
+			$('a','li.app').before("<span class='ui-icon ui-icon-wrench'></span>");
+			$('a','li.bin').before("<span class='ui-icon ui-icon-script'></span>");
+			addDirectoryClickEvent("#parent_dir a[id!='parent_option'],#dirs a");
+			addFileClickEvent('#files a');
+			addParentOptionMenuEvent();
+			addHoverEvent('#parent_dir a,#explorer_content ul li');
+			addIconClickEvent('#explorer_content ul .ui-icon');
+			_dirCount=0;
+			_fileCount=0;
+			setTotalItem();
+			if(_copyTo.href!==''&&_copyTo.parent===$('#parent_option').attr('href'))
+				$("a[href='"+_copyTo.href+"']").attr('class','mark_copy');
+		}else showAlertDialog(data);
+	});
+}
+
+function setTotalItem(){
+	var dirs=$('#dirs li').length;
+	var files=$('#files li').length;
+	var total='( ';
+	if(_dirCount==0)_dirCount=dirs;
+	if(_fileCount==0)_fileCount=files;
+	if(dirs+files>0){
+		if(dirs>0){
+			if(dirs>1)total+=dirs+' directories';
+			else total+=dirs+' directory';
+		}
+		if(files>0){
+			if(dirs>0)total+=', ';
+			if(files>1)total+=files+' files';
+			else total+=files+' file';
+		}
+	}else total+='Empty';
+	total+=' )';
+	$('#total_item').text(total);
+}
+
+function addHoverEvent(selector){
+	$(selector).hover(
+		function(){
+			$(this).addClass('ui-state-hover');
+		},
+		function(){
+			$(this).removeClass('ui-state-hover');
+		}
+	);
+}
+
+function addParentOptionMenuEvent(){
+	$('#parent_option').click(function(event){
+		event.preventDefault();
+		$('#parent_option_menu').dialog('option','position',{
+			my:'left top',
+			at:'bottom right',
+			of:this,
+			collision:'fit'
+		});
+		if(_copyTo.href===''||_copyTo.href===$(this).attr('href')||_copyTo.parent===$(this).attr('href')){
+			$('#paste_here').button('option','disabled',true);
+			$('#move_here').button('option','disabled',true);
+		}else{
+			$('#paste_here').button('option','disabled',false);
+			$('#move_here').button('option','disabled',false);
+		}
+		$('#parent_option_menu').dialog('option','title',$(this).text());
+		$('#parent_option_menu').dialog('open');
+	});
+}
+
+function addIconClickEvent(selector){
+	$(selector).click(function(){
+		$('#item_option_menu').dialog('option','position',{
+			my:'left top',
+			at:'bottom right',
+			of:this,
+			collision:'fit'
+		});
+		_sourceId=$(this).parent().attr('id');
+		if($('#'+_sourceId).find('a').attr('href')===_copyTo.href)
+			$('#copy_to').button('option','disabled',true);
+		else $('#copy_to').button('option','disabled',false);
+		_sourceName=$('#'+_sourceId+' a').text();
+		$('#item_option_menu').dialog('option','title',_sourceName);
+		$('#item_option_menu').dialog('open');
+	});
+}
+
+function addDirectoryClickEvent(selector){
+	$(selector).click(function(event){
+		event.preventDefault();
+		setExplorerContent($(this).attr('href'));
+	});
+}
+
+function addFileClickEvent(selector){
+	$(selector).click(function(event){
+		event.preventDefault();
+		var d=$('#file_frame_dialog');
+		var f=$('#file_frame');
+		var w=window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;
+		var h=window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;
+		w=w-d.outerWidth()+d.width()-28;
+		h=h-d.outerHeight()+d.height()-44;
+		if(w>h)w=parseInt(1.33*h);
+		else h=parseInt(0.75*w);
+		f.width(w);
+		f.height(h);
+		f.attr('src',$(this).attr('href'));
+		d.dialog('option','title',$(this).text());
+		d.dialog('open');
+	});
+}
+
+function showLoginDialog(){
+	$('#main').tabs('option','active',false);
+	$('#main').tabs('disable');
+	$('#login_dialog').dialog('open');
+}
+
+function showAlertDialog(msg){
+	$('#dialog').empty().append(msg);
+	$('#dialog').dialog('option','buttons',[
+		{
+			text:'OK',
+			icons:{primary:'ui-icon-check'},
+			click:function(){
+				$(this).dialog('close');
+			}
+		}
+	]);
+	$('#dialog').dialog('open');
+	setAppStatus();
+}
+
+function showFreezeDialog(title,msg){
+	$('#freeze_dialog').dialog('option','title',title);
+	$('#freeze_dialog').empty().append(msg);
+	$('#freeze_dialog').dialog('open');
+}
+
+function showConfirmDialog(btn){
+	var label=$(btn).text();
+	var icon='ui-icon-';
+	var msg;
+	var elem;
+	if(label==='New directory'){
+		icon+='folder-collapsed';
+		msg="Enter a new diectory name&nbsp;:<br><br>"+
+			"<input id='newdir' type='text' value='new_directory' style='width:100%'>";
+	}
+	else if(label==='Delete'){
+		icon+='trash';
+		msg="Are you sure to delete&nbsp;:<br><br>"+
+			"<strong>"+_sourceName+"</strong>&nbsp;?";
+	}
+	else if(label==='Rename'){
+		icon+='arrowrefresh-1-w';
+		msg="Enter a new name for&nbsp;:<br><br>"+
+			"<strong>"+_sourceName+"</strong><br><br>"+
+			"<input id='newname' type='text' value=\""+_sourceName+"\" style='width:100%'>";
+	}
+	else if(label==='Logout'){
+		icon+='circle-close';
+		msg="Are you sure to <strong>logout</strong>&nbsp;?";
+	}
+	else if(label==='Shutdown'){
+		icon+='power';
+		msg="Are you sure to <strong>shutdown</strong>&nbsp;?";
+	}
+	$('#dialog').empty().append(msg);
+	$('#dialog').dialog('option','buttons',[
+		{
+			text:'Cancel',
+			icons:{primary:'ui-icon-check'},
+			click:function(){
+				$(this).dialog('close');
+			}
+		},{
+			text:label,
+			icons:{primary:icon},
+			click:function(event){
+				$(this).dialog('close');
+				var label=$(event.target).closest('button').text();
+				if(label==='New directory')newDirectory();
+				else if(label==='Delete')deleteItem();
+				else if(label==='Rename')renameItem();
+				else if(label==='Logout')logout();
+				else if(label==='Shutdown')shutdown();
+			}
+		}
+	]);
+	$('#dialog').dialog('open');
+	if(label==='New directory')$('#newdir').select();
+	else if(label==='Rename')$('#newname').select();
+}
+
+function newDirectory(){
+	var target=$('#newdir').val();
+	$.post('/newdirectory',{
+			filename:target
+		},function(data){
+			if(data==='Success')addFilelistItem('dir',target,'');
+			else showAlertDialog(data);
+		}
+	);
+
+}
+
+function deleteItem(){
+	showFreezeDialog('Deleting...',_sourceName+'...');
+	$.post('/deletefile',{
+			filename:_sourceName
+		},function(data){
+			$('#freeze_dialog').dialog('close');
+			if(data==='Success'){
+				if($('#'+_sourceId).find('a').attr('href')===_copyTo.href)_copyTo.href='';
+				$('#'+_sourceId).remove();
+				setTotalItem();
+			}else showAlertDialog(data);
+		}
+	);
+}
+
+function renameItem(){
+	$.post('/rename',{
+			filename:_sourceName,
+			destination:$('#newname').val()
+		},function(data){
+			if(data==='Success'){
+				$('#'+_sourceId).find('a').text($('#newname').val());
+				if($('#'+_sourceId).find('a').attr('href')===_copyTo.href){
+					_copyTo.href='';
+					$('#'+_sourceId).find('a').attr('class','');
+				}
+				$('#'+_sourceId).find('a').attr('href',$('#parent_option').attr('href')+encodeURIComponent($('#newname').val()));
+			}
+			else showAlertDialog(data);
+		}
+	);
+}
+
+function logout(){
+	$.get('/logout',function(data){
+		if(data.substring(0,7)==='Success'){
+			showAlertDialog(data.substring(9));
+		}else showAlertDialog(data);
+	});
+}
+
+function shutdown(){
+	$.get('/shutdown',function(data){
+		showAlertDialog(data);
+	});
+	$('#main').tabs('option','active',false);
+	$('#main').tabs('disable');
+}
+
+function successOfPasteOrMove(data){
+	$('#paste_here').button('option','disabled',true);
+	$('#move_here').button('option','disabled',true);
+	var clazz=data.substring(0,3);
+	var size;
+	if(clazz==='dir')size=''
+	else size=data.substring(4);
+	addFilelistItem(clazz,_copyTo.name,size);
+}
+
+function addFilelistItem(clazz,name,size){
+	var id;
+	if(clazz==='dir'){
+		id='dir_'+_dirCount;
+		_dirCount++;
+		$('#dirs').append("<li id='"+id+"'>\n"+
+			"<span class='ui-icon ui-icon-folder-collapsed'></span>\n"+
+			"<a rel='directory' href='"+$('#parent_option').attr('href')+encodeURIComponent(name)+"/'>"+
+			name+"</a>\n</li>\n");
+		addDirectoryClickEvent('#'+id+' a');
+		addHoverEvent('#'+id);
+		addIconClickEvent('#'+id+' .ui-icon');
+	}else{
+		id='file_'+_fileCount;
+		_fileCount++;
+		var icon='';
+		if(clazz==='img')icon='image';
+		else if(clazz==='vid')icon='video';
+		else if(clazz==='aud')icon='volume-on';
+		else if(clazz==='txt')icon='document';
+		else if(clazz==='app')icon='wrench';
+		else if(clazz==='bin')icon='script';
+		$('#files').append("<li id='"+id+"' class='"+clazz+"'>\n"+
+			"<span class='ui-icon ui-icon-"+icon+"'></span>\n"+
+			"<a href='"+$('#parent_option').attr('href')+encodeURIComponent(name)+"'>"+
+			name+"</a>&nbsp;&nbsp;\n"+size+"</li>\n");
+		addFileClickEvent('#'+id+' a');
+		addHoverEvent('#'+id);
+		addIconClickEvent('#'+id+' .ui-icon');
+	}
+	setTotalItem();
+}
+
+function setCameraOn(){
+	setCameraOff(_isPreviewing);
+	var ctype='Rear';
+	if(_cameraType===_CAMERA.FRONT)ctype='Front';
+	showFreezeDialog('Camera activating',ctype+' Facing Camera activating, please wait...');
+	_timerCounter=0;
+	checkCameraOff();
+}
+
+function checkCameraOff(){
+	$.get('/camera/isactive',function(data){
+		if(data==='false'){
+			var utype='on';
+			if(_cameraType===_CAMERA.FRONT)utype='fronton';
+			$.get('/camera/setcamera'+utype,function(data){
+				if(data==='Success'){
+					_timerCounter=0;
+					setTimeout(function(){checkCameraOn();},500);
+				}else{
+					$('#freeze_dialog').dialog('close');
+					_isPreviewing=false;
+					showAlertDialog(data);
+				}
+			});
+		}else if(data==='true'){
+			if(_timerCounter===10){
+				$('#freeze_dialog').dialog('close');
+				_isPreviewing=false;
+				showAlertDialog('Camera activating failed');
+			}
+			_timerCounter++;
+			setTimeout(function(){checkCameraOff();},500);
+		}else{
+			$('#freeze_dialog').dialog('close');
+			_isPreviewing=false;
+			showAlertDialog(data);
+		}
+	});
+}
+
+function checkCameraOn(){
+	var min,max,val;
+	$.get('/camera/isactive',function(data){
+		if(data==='true'){
+			$('#freeze_dialog').dialog('close');
+			if(_cameraType===_CAMERA.REAR){
+				$('#camera_rear').button('disable');
+				if(_isCameraFrontSupport)$('#camera_front').button('enable');
+				$.get('/camera/iscameraflashsupport',function(data){
+					if(data==='true')$('#flash_on').button('enable');
+				});
+			}else{
+				$('#camera_front').button('disable');
+				$('#camera_rear').button('enable');
+			}
+			$('#camera_off').button('enable');
+			if(_isPreviewing){
+				startVideoPreview();
+				$('#preview_off').button('enable');
+			}else $('#preview_on').button('enable');
+			$('#capture_photo').button('enable');
+			$('#start_record').button('enable');
+			$.get('/camera/getsupportedpicturesizes',function(data){
+				if(data!=='Camera inactive'){
+					$('#picture_sizes').empty().append(data);
+					$('#picture_sizes').selectmenu('enable');
+				}
+				$.get('/camera/getsupportedscenemodes',function(data){
+					if(data!=='Camera inactive'){
+						$('#scene_modes').empty().append(data);
+						$('#scene_modes').selectmenu('enable');
+					}
+					$.get('/camera/getsupportedwhitebalance',function(data){
+						if(data!=='Camera inactive'){
+							$('#white_balance').empty().append(data);
+							$('#white_balance').selectmenu('enable');
+						}
+						$.get('/camera/getsupportedcoloreffects',function(data){
+							if(data!=='Camera inactive'){
+								$('#color_effects').empty().append(data);
+								$('#color_effects').selectmenu('enable');
+							}
+							$.get('/camera/getsupportedvideoprofiles',function(data){
+								if(data!=='Camera inactive'){
+									$('#video_profiles').empty().append(data);
+									$('#video_profiles').selectmenu('enable');
+								}
+								$.get('/camera/issupportedexposure',function(data){
+									if(data==='true'){
+										$('#exposure_value').slider('enable');
+										$.get('/camera/getminexposure',function(data){
+											if(data!=='Camera inactive')
+												$('#exposure_value').slider('option','min',parseInt(data));
+											$.get('/camera/getmaxexposure',function(data){
+												if(data!=='Camera inactive')
+													$('#exposure_value').slider('option','max',parseInt(data));
+												$.get('/camera/getexposurevalue',function(data){
+													if(data!=='Camera inactive')
+														$('#exposure_value').slider('value',parseInt(data));
+												});
+											});
+										});
+									}
+									$('.camera_settings_select').selectmenu('refresh');
+									$('#cam_settings').tabs('enable');
+								});
+							});
+						});
+					});
+				});
+			});
+			//$.get('/camera/getexposurestep',function(data){});
+		}else{
+			if(_timerCounter===9){
+				$('#freeze_dialog').dialog('close');
+				setCameraOff(false);
+				showAlertDialog("Can't initialize the camera or your device doesn't support this camera type.");
+			}else{
+				_timerCounter++;
+				setTimeout(function(){checkCameraOn();},500);
+			}
+		}
+	});
+}
+
+function setCameraOff(preview){
+	$.get('/camera/setcameraoff');
+	_isPreviewing=preview;
+	stopVideoPreview();
+	$('#camera_rear').button('enable');
+	if(_isCameraFrontSupport)$('#camera_front').button('enable');
+	else $('#camera_front').button('disable');
+	$('#camera_off').button('disable');
+	$('#preview_on').button('disable');
+	$('#preview_off').button('disable');
+	$('#capture_photo').button('disable');
+	$('#start_record').button('disable');
+	$('#stop_record').button('disable');
+	$('#flash_on').button('disable');
+	$('#flash_off').button('disable');
+	$('.camera_settings_select').selectmenu('disable');
+	$('#exposure_value').slider('disable');
+	$('#cam_settings').tabs('option','active',false);
+	$('#cam_settings').tabs('disable');
+}
+
+function previewVideo(){
+	$('#preview_frame').attr('src','#');
+	$('#preview_frame').attr('src','/camera/preview.jpg?'+new Date().getTime());
+	$.get('/camera/isactive',function(data){
+		if(data==='false')setCameraOff(false);
+	});
+}
+
+function startVideoPreview(){
+	_videoInterval=setInterval(function(){previewVideo();},100);
+}
+
+function stopVideoPreview(){
+	clearInterval(_videoInterval);
+	$('#preview_frame').attr('src','#');
+}
+
+</script>
+</body>
+</html>

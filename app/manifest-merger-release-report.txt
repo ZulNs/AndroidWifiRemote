@@ -1,0 +1,155 @@
+-- Merging decision tree log ---
+manifest
+ADDED from AndroidManifest.xml:2:1
+	package
+		ADDED from AndroidManifest.xml:3:5
+		INJECTED from AndroidManifest.xml:0:0
+		INJECTED from AndroidManifest.xml:0:0
+	android:versionName
+		INJECTED from AndroidManifest.xml:0:0
+		INJECTED from AndroidManifest.xml:0:0
+	xmlns:android
+		ADDED from AndroidManifest.xml:2:11
+	android:versionCode
+		INJECTED from AndroidManifest.xml:0:0
+		INJECTED from AndroidManifest.xml:0:0
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from AndroidManifest.xml:7:5
+	android:name
+		ADDED from AndroidManifest.xml:7:22
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from AndroidManifest.xml:8:5
+	android:name
+		ADDED from AndroidManifest.xml:8:22
+uses-permission#android.permission.CAMERA
+ADDED from AndroidManifest.xml:9:5
+	android:name
+		ADDED from AndroidManifest.xml:9:22
+uses-permission#android.permission.FLASHLIGHT
+ADDED from AndroidManifest.xml:10:5
+	android:name
+		ADDED from AndroidManifest.xml:10:22
+uses-permission#android.permission.INTERNET
+ADDED from AndroidManifest.xml:11:5
+	android:name
+		ADDED from AndroidManifest.xml:11:22
+uses-permission#android.permission.RECORD_AUDIO
+ADDED from AndroidManifest.xml:12:5
+	android:name
+		ADDED from AndroidManifest.xml:12:22
+uses-permission#android.permission.WAKE_LOCK
+ADDED from AndroidManifest.xml:13:5
+	android:name
+		ADDED from AndroidManifest.xml:13:22
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from AndroidManifest.xml:14:5
+	android:name
+		ADDED from AndroidManifest.xml:14:22
+uses-feature#android.hardware.camera
+ADDED from AndroidManifest.xml:16:5
+	android:name
+		ADDED from AndroidManifest.xml:16:19
+uses-feature#android.hardware.camera.autofocus
+ADDED from AndroidManifest.xml:17:5
+	android:name
+		ADDED from AndroidManifest.xml:17:19
+uses-feature#android.hardware.camera.flash
+ADDED from AndroidManifest.xml:18:5
+	android:name
+		ADDED from AndroidManifest.xml:18:19
+uses-feature#android.hardware.camera.front
+ADDED from AndroidManifest.xml:19:5
+	android:name
+		ADDED from AndroidManifest.xml:19:19
+uses-feature#android.hardware.microphone
+ADDED from AndroidManifest.xml:20:5
+	android:name
+		ADDED from AndroidManifest.xml:20:19
+uses-feature#android.hardware.wifi
+ADDED from AndroidManifest.xml:21:5
+	android:name
+		ADDED from AndroidManifest.xml:21:19
+application
+ADDED from AndroidManifest.xml:23:5
+	android:label
+		ADDED from AndroidManifest.xml:26:9
+	android:manageSpaceActivity
+		ADDED from AndroidManifest.xml:28:9
+	android:allowBackup
+		ADDED from AndroidManifest.xml:24:9
+	android:icon
+		ADDED from AndroidManifest.xml:25:9
+	android:theme
+		ADDED from AndroidManifest.xml:27:9
+activity#id.zulns.wifiremote.MainActivity
+ADDED from AndroidManifest.xml:29:9
+	android:label
+		ADDED from AndroidManifest.xml:31:13
+	android:name
+		ADDED from AndroidManifest.xml:30:13
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from AndroidManifest.xml:34:13
+action#android.intent.action.MAIN
+ADDED from AndroidManifest.xml:35:17
+	android:name
+		ADDED from AndroidManifest.xml:35:25
+category#android.intent.category.LAUNCHER
+ADDED from AndroidManifest.xml:37:17
+	android:name
+		ADDED from AndroidManifest.xml:37:27
+service#id.zulns.wifiremote.RemoteService
+ADDED from AndroidManifest.xml:41:9
+	android:enabled
+		ADDED from AndroidManifest.xml:43:13
+	android:label
+		ADDED from AndroidManifest.xml:46:13
+	android:exported
+		ADDED from AndroidManifest.xml:44:13
+	android:icon
+		ADDED from AndroidManifest.xml:45:13
+	android:name
+		ADDED from AndroidManifest.xml:42:13
+receiver#id.zulns.wifiremote.WifiStateReceiver
+ADDED from AndroidManifest.xml:49:9
+	android:enabled
+		ADDED from AndroidManifest.xml:51:13
+	android:exported
+		ADDED from AndroidManifest.xml:52:13
+	android:name
+		ADDED from AndroidManifest.xml:50:13
+intent-filter#android.net.wifi.STATE_CHANGE+android.net.wifi.WIFI_AP_STATE_CHANGED+android.net.wifi.supplicant.CONNECTION_CHANGE
+ADDED from AndroidManifest.xml:53:13
+action#android.net.wifi.STATE_CHANGE
+ADDED from AndroidManifest.xml:54:17
+	android:name
+		ADDED from AndroidManifest.xml:54:25
+action#android.net.wifi.supplicant.CONNECTION_CHANGE
+ADDED from AndroidManifest.xml:55:17
+	android:name
+		ADDED from AndroidManifest.xml:55:25
+action#android.net.wifi.WIFI_AP_STATE_CHANGED
+ADDED from AndroidManifest.xml:56:17
+	android:name
+		ADDED from AndroidManifest.xml:56:25
+activity#id.zulns.wifiremote.EditUsersActivity
+ADDED from AndroidManifest.xml:60:9
+	android:label
+		ADDED from AndroidManifest.xml:62:13
+	android:name
+		ADDED from AndroidManifest.xml:61:13
+activity#id.zulns.wifiremote.CameraActivity
+ADDED from AndroidManifest.xml:64:9
+	android:label
+		ADDED from AndroidManifest.xml:66:13
+	android:theme
+		ADDED from AndroidManifest.xml:67:13
+	android:name
+		ADDED from AndroidManifest.xml:65:13
+uses-sdk
+INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
+	android:targetSdkVersion
+		INJECTED from AndroidManifest.xml:0:0
+		INJECTED from AndroidManifest.xml:0:0
+	android:minSdkVersion
+		INJECTED from AndroidManifest.xml:0:0
+		INJECTED from AndroidManifest.xml:0:0

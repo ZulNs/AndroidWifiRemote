@@ -1,0 +1,127 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    tools:context="id.zulns.androidwifiremote.MainActivity" >
+
+    <TextView
+        android:id="@+id/notificationLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/label_notification_check"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/notificationCheck"
+        android:layout_alignBaseline="@+id/notificationCheck" />
+
+    <CheckBox
+        android:id="@+id/notificationCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+        android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+        android:button="@null"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="onClickNotificationCheck"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/label_port_number"
+        android:id="@+id/portNumberLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBaseline="@+id/portNumberText" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/portNumberText"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/portNumberLabel"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/notificationCheck"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/label_timeout"
+        android:id="@+id/timeoutLabel"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignBaseline="@+id/timeoutText" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/timeoutText"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/portNumberText"
+        android:layout_below="@+id/portNumberText"
+        android:layout_marginTop="4dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_edit_users_button"
+        android:id="@+id/editUsersButton"
+        android:onClick="onClickEditUsersButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="20dp"
+        android:layout_alignBaseline="@+id/applySettingsButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_apply_settings"
+        android:id="@+id/applySettingsButton"
+        android:onClick="onClickApplySettingsButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="20dp"
+        android:layout_below="@+id/timeoutText"
+        android:layout_marginTop="4dp" />
+
+    <View
+        style="@style/Divider"
+        android:id="@+id/divider"
+        android:layout_marginTop="4dp"
+        android:layout_below="@+id/applySettingsButton" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/infoText"
+        android:layout_below="@+id/divider"
+        android:layout_marginTop="4dp"
+        android:textIsSelectable="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClickActionButton"
+        android:id="@+id/actionButton"
+        android:layout_below="@+id/infoText"
+        android:layout_marginTop="4dp"
+        android:layout_alignLeft="@+id/applySettingsButton"
+        android:layout_alignRight="@+id/applySettingsButton" />
+
+</RelativeLayout>

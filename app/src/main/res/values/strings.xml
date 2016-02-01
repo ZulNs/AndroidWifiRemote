@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Android WiFi Remote</string>
+    <string name="service_name">Remote Service</string>
+    <string name="label_notification_check">Show on notification bar</string>
+    <string name="label_protection_check">Login required</string>
+    <string name="label_edit_users_button">Edit users</string>
+    <string name="label_start_remote">Start Remote</string>
+    <string name="label_stop_remote">Stop Remote</string>
+    <string name="label_exit_app">Exit</string>
+    <string name="title_activity_edit_users">Edit Users</string>
+    <string name="username_hint">Username:</string>
+    <string name="password_hint">Password:</string>
+    <string name="label_delete_users">Delete user(s)</string>
+    <string name="label_add_user">Add user</string>
+    <string name="label_show_password">Show password</string>
+    <string name="label_back">Back</string>
+    <string name="label_save_users">Save</string>
+    <string name="context_menu_edit">Edit</string>
+    <string name="context_menu_delete">Delete</string>
+    <string name="title_activity_camera">Camera Activity</string>
+    <string name="label_port_number">Port number ( > 1024 ) :</string>
+    <string name="label_timeout">Timeout (minutes) :</string>
+    <string name="label_apply_settings">Apply Settings</string>
+    <string name="title_activity_dummy">DummyActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
